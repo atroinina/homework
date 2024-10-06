@@ -29,10 +29,12 @@ Usage:
 
 import requests
 import json
-from util import *
+import os
+from util import get_authorization_key, clear_directory
+
 
 # Load data from API
-def fetch_sales_data(raw_dir:str) -> None:
+def fetch_sales_data(raw_dir: str) -> None:
     """Fetch sales data from an API.
 
     The function retrieves data from the API, clears the raw directory,
@@ -46,8 +48,8 @@ def fetch_sales_data(raw_dir:str) -> None:
     Exception: If there is an error while fetching data from the API.
     EnvironmentError: If the 'AUTH_TOKEN' environment variable is not set.
     """
-    AUTH_TOKEN = get_authorization_key()
-    headers = {'Authorization': AUTH_TOKEN}
+    auth_token = get_authorization_key()
+    headers = {'Authorization': auth_token}
     url = 'https://fake-api-vycpfa6oca-uc.a.run.app/sales'
     current_page = 1
     while True:
