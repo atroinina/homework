@@ -31,7 +31,7 @@ import requests
 import json
 import os
 
-from lesson_02.util import get_base_dir
+from lesson_02.src.util import get_base_dir
 from util import get_authorization_key, clear_directory
 
 

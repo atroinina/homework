@@ -18,7 +18,7 @@ import json
 import fastavro
 from fastavro.schema import load_schema
 from flask import Flask, request, jsonify
-from lesson_02.util import get_base_dir
+from lesson_02.src.util import get_base_dir
 from util import clear_directory
 app = Flask(__name__)
 
