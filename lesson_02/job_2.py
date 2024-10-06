@@ -4,6 +4,8 @@ import fastavro
 from fastavro.schema import load_schema
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
+
+from lesson_02.util import get_base_dir
 from util import clear_directory
 app = Flask(__name__)
 
@@ -16,14 +18,12 @@ def convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
     raw_dir (str): The directory containing JSON files.
     stg_dir (str): The directory where Avro files will be saved.
     """
-    today = '2022-08-09'
-    stg_sales_dir = os.path.join(stg_dir, 'sales', today)
 
     # Make directory to save a file and ensure it's clean
-    os.makedirs(stg_sales_dir, exist_ok=True)
-    clear_directory(stg_sales_dir)
-
-    schema = load_schema('sales_schema.avsc')  # Define Avro schema
+    os.makedirs(stg_dir, exist_ok=True)
+    clear_directory(stg_dir)
+    path_to_schema = os.path.join(get_base_dir(), 'sales_schema.avsc')
+    schema = load_schema(path_to_schema)  # Define Avro schema
 
     for json_file_name in os.listdir(raw_dir):
         if json_file_name.endswith('.json'):
@@ -33,7 +33,7 @@ def convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
                 data = json.load(json_file)
 
             avro_file_name = json_file_name.replace('.json', '.avro')
-            avro_file_path = os.path.join(stg_sales_dir, avro_file_name)
+            avro_file_path = os.path.join(stg_dir, avro_file_name)
 
             # Convert to Avro and save
             with open(avro_file_path, 'wb') as avro_file:
@@ -42,7 +42,7 @@ def convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
             print(f"Converted {json_file_name} to Avro and saved to {avro_file_path}")
 
 
-@app.route('/convert', methods=['POST'])
+@app.route('/', methods=['POST'])
 def handle_convert_request():
     """
     Endpoint to handle the conversion job.
@@ -60,8 +60,7 @@ def handle_convert_request():
 
     convert_json_to_avro(raw_dir, stg_dir)
 
-    return jsonify({'message': 'JSON files successfully converted to Avro.'}), 200
-
+    return jsonify({'message': 'JSON files successfully converted to Avro.'}), 201
 
 if __name__ == "__main__":
     app.run(host='localhost', port=8082)

@@ -166,3 +166,5 @@ cython_debug/
 /.idea/modules.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
+/lesson_02/raw/
+/lesson_02/stg/

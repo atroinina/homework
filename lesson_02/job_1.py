@@ -26,10 +26,13 @@ Usage:
 - Run the script to fetch and store sales data from the API.
 - Ensure the 'AUTH_TOKEN' environment variable is set before execution.
 """
+from xml.etree.ElementTree import tostring
 
 import requests
 import json
 import os
+
+from lesson_02.util import get_base_dir
 from util import get_authorization_key, clear_directory
 
 
@@ -51,12 +54,18 @@ def fetch_sales_data(raw_dir: str) -> None:
     auth_token = get_authorization_key()
     headers = {'Authorization': auth_token}
     url = 'https://fake-api-vycpfa6oca-uc.a.run.app/sales'
+    today = '2022-08-09'
     current_page = 1
+    # Format data for the filepath
+
+    # Make directory to save a file and make sure that it is empty
+    os.makedirs(raw_dir, exist_ok=True)
+    clear_directory(raw_dir)
     while True:
         response = requests.get(
             url,
             headers=headers,
-            params={'date': '2022-08-09', 'page': current_page}
+            params={'date': today, 'page': current_page}
         )
 
         if response.status_code == 404:
@@ -74,17 +83,11 @@ def fetch_sales_data(raw_dir: str) -> None:
 
         data = response.json()
 
-        # Format data for the filepath
-        today = '2022-08-09'
-        sales_dir = os.path.join(raw_dir, 'sales', today)
 
-        # Make directory to save a file and make sure that it is empty
-        os.makedirs(sales_dir, exist_ok=True)
-        clear_directory(sales_dir)
 
         # Give a name to a file
         file_name = f"sales-{today}_{current_page}.json"
-        file_path = os.path.join(sales_dir, file_name)
+        file_path = os.path.join(raw_dir, file_name)
 
         # Save the file as JSON
         with open(file_path, 'w') as json_file:
@@ -96,6 +99,6 @@ def fetch_sales_data(raw_dir: str) -> None:
 
 if __name__ == "__main__":
     # Define path to raw directory
-    raw_dir = '/path/to/my_dir/raw'
+    raw_dir = os.path.join(get_base_dir(), 'raw')
     os.makedirs(raw_dir, exist_ok=True)
     fetch_sales_data(raw_dir)

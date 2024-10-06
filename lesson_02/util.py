@@ -15,6 +15,16 @@ def get_authorization_key() -> str:
         raise EnvironmentError("AUTH_TOKEN is not set")
     return AUTH_TOKEN
 
+def get_base_dir() -> str:
+    """
+    Get base directory from environment variables.
+    :return: base directory
+    """
+    load_dotenv()
+    base_dir = os.getenv('BASE_DIR')
+    if not base_dir:
+        raise EnvironmentError("BASE_DIR is not set")
+    return base_dir
 
 # Clear directory for idempotence
 def clear_directory(path: str) -> None:
