@@ -10,8 +10,6 @@ This module is responsible for:
    before saving new files.
 4. Handling multiple pages of data from the API
    and saving them into separate files.
-5. Using an environment variable for the API authorization token
-   to avoid storing sensitive information in the code.
 
 Functions:
 - clear_directory(path): Removes all files from the specified directory
@@ -46,7 +44,7 @@ if not AUTH_TOKEN:
 
 
 # Clear directory for idempotence
-def clear_directory(path):
+def clear_directory(path:str) -> None:
     """
     Remove all files from the specified directory.
 
@@ -63,7 +61,7 @@ def clear_directory(path):
 
 
 # Load data from API
-def fetch_sales_data(raw_dir):
+def fetch_sales_data(raw_dir:str) -> None:
     """Fetch sales data from an API.
 
     The function retrieves data from the API, clears the raw directory,
@@ -126,5 +124,4 @@ if __name__ == "__main__":
     # Define path to raw directory
     raw_dir = '/path/to/my_dir/raw'
     os.makedirs(raw_dir, exist_ok=True)
-
     fetch_sales_data(raw_dir)
