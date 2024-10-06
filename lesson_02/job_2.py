@@ -1,24 +1,36 @@
+"""
+Flask application for converting JSON files to Avro format.
+
+This module provides an endpoint to convert JSON files from a specified
+raw directory to Avro format and save them in a staging directory (job 2).
+It uses Fastavro for the conversion and requires an Avro schema file.
+
+Functions:
+    - convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
+        Converts JSON files to Avro format.
+
+    - handle_convert_request():
+        Flask endpoint to handle conversion requests.
+"""
+
 import os
 import json
 import fastavro
 from fastavro.schema import load_schema
 from flask import Flask, request, jsonify
-from dotenv import load_dotenv
-
 from lesson_02.util import get_base_dir
 from util import clear_directory
 app = Flask(__name__)
 
+
 def convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
     """
-    Converts JSON files from the raw directory to Avro format
-    and saves them to the staging directory.
+    Convert JSON files to Avro format and save them in the stg directory.
 
     Parameters:
     raw_dir (str): The directory containing JSON files.
     stg_dir (str): The directory where Avro files will be saved.
     """
-
     # Make directory to save a file and ensure it's clean
     os.makedirs(stg_dir, exist_ok=True)
     clear_directory(stg_dir)
@@ -39,7 +51,7 @@ def convert_json_to_avro(raw_dir: str, stg_dir: str) -> None:
             with open(avro_file_path, 'wb') as avro_file:
                 fastavro.writer(avro_file, schema, data)
 
-            print(f"Converted {json_file_name} to Avro and saved to {avro_file_path}")
+            print(f"Converted {json_file_name} to Avro{avro_file_path}")
 
 
 @app.route('/', methods=['POST'])
@@ -47,8 +59,10 @@ def handle_convert_request():
     """
     Endpoint to handle the conversion job.
 
-    This function takes a POST request with two parameters: raw_dir and stg_dir,
-    reads the JSON files from raw_dir, converts them to Avro, and saves them in stg_dir.
+    This function takes a POST request
+    with two parameters: raw_dir and stg_dir,
+    reads the JSON files from raw_dir, converts them to Avro,
+    and saves them in stg_dir.
     """
     req_data = request.get_json()
 
@@ -56,11 +70,12 @@ def handle_convert_request():
     stg_dir = req_data.get('stg_dir')
 
     if not raw_dir or not stg_dir:
-        return jsonify({'error': 'Both raw_dir and stg_dir are required.'}), 400
+        return jsonify({'error': 'raw_dir and stg_dir are required.'}), 400
 
     convert_json_to_avro(raw_dir, stg_dir)
 
-    return jsonify({'message': 'JSON files successfully converted to Avro.'}), 201
+    return jsonify(message='JSON files converted to Avro.'), 201
+
 
 if __name__ == "__main__":
     app.run(host='localhost', port=8082)

@@ -26,7 +26,6 @@ Usage:
 - Run the script to fetch and store sales data from the API.
 - Ensure the 'AUTH_TOKEN' environment variable is set before execution.
 """
-from xml.etree.ElementTree import tostring
 
 import requests
 import json
@@ -82,8 +81,6 @@ def fetch_sales_data(raw_dir: str) -> None:
             raise Exception(f"Error fetching data: {response.status_code}.")
 
         data = response.json()
-
-
 
         # Give a name to a file
         file_name = f"sales-{today}_{current_page}.json"
