@@ -12,8 +12,6 @@ This module is responsible for:
    and saving them into separate files.
 
 Functions:
-- clear_directory(path): Removes all files from the specified directory
-  to ensure idempotent behavior.
 - fetch_sales_data(raw_dir): Fetches sales data from the API and saves it
   in JSON format within a date-specific directory.
 
@@ -29,36 +27,9 @@ Usage:
 - Ensure the 'AUTH_TOKEN' environment variable is set before execution.
 """
 
-import os
 import requests
 import json
-from dotenv import load_dotenv
-
-# Load secret variables
-load_dotenv()
-
-AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-
-if not AUTH_TOKEN:
-    raise EnvironmentError("AUTH_TOKEN is not set")
-
-
-# Clear directory for idempotence
-def clear_directory(path:str) -> None:
-    """
-    Remove all files from the specified directory.
-
-    This function ensures idempotence by clearing the contents
-    of the given directory before new data is saved.
-
-    Parameters:
-    path (str): The path of the directory to be cleared.
-    """
-    for file in os.listdir(path):
-        file_path = os.path.join(path, file)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-
+from util import *
 
 # Load data from API
 def fetch_sales_data(raw_dir:str) -> None:
@@ -75,6 +46,7 @@ def fetch_sales_data(raw_dir:str) -> None:
     Exception: If there is an error while fetching data from the API.
     EnvironmentError: If the 'AUTH_TOKEN' environment variable is not set.
     """
+    AUTH_TOKEN = get_authorization_key()
     headers = {'Authorization': AUTH_TOKEN}
     url = 'https://fake-api-vycpfa6oca-uc.a.run.app/sales'
     current_page = 1
