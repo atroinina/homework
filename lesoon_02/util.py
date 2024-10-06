@@ -17,7 +17,7 @@ def get_authorization_key() -> str:
 
 
 # Clear directory for idempotence
-def clear_directory(path:str) -> None:
+def clear_directory(path: str) -> None:
     """
     Remove all files from the specified directory.
 
