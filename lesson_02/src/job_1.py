@@ -30,9 +30,7 @@ Usage:
 import requests
 import json
 import os
-
-from lesson_02.src.util import get_base_dir
-from util import get_authorization_key, clear_directory
+from util import get_authorization_key, clear_directory, get_base_dir
 
 
 # Load data from API
@@ -55,6 +53,7 @@ def fetch_sales_data(raw_dir: str) -> None:
     url = 'https://fake-api-vycpfa6oca-uc.a.run.app/sales'
     today = '2022-08-09'
     current_page = 1
+
     # Format data for the filepath
 
     # Make directory to save a file and make sure that it is empty
@@ -68,13 +67,12 @@ def fetch_sales_data(raw_dir: str) -> None:
         )
 
         if response.status_code == 404:
-            response = requests.get(
-                url,
-                headers=headers,
-                params={'date': '2022-08-09', 'page': current_page-1}
-            )
-            if response.status_code != 404:
-                print("The end of a file reached.")
+            if current_page == 1:
+                raise Exception(
+                    f'Error fetching data: {response.status_code}.'
+                )
+            else:
+                print("The end of the file reached")
                 break
 
         if response.status_code != 200 and response.status_code != 404:

@@ -168,3 +168,6 @@ cython_debug/
 /.idea/vcs.xml
 /lesson_02/raw/
 /lesson_02/stg/
+/lesson_02/test/temp_staging/
+/lesson_02/test/test/
+/lesson_02/test/test_raw_dir/
