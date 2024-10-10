@@ -9,6 +9,7 @@ if not BASE_DIR:
     print("BASE_DIR environment variable must be set")
     exit(1)
 
+# Job ports
 JOB1_PORT = 8081
 JOB2_PORT = 8082
 
