@@ -16,10 +16,10 @@ RAW_DIR = os.path.join(BASE_DIR, "raw", "sales", "2022-08-09")
 STG_DIR = os.path.join(BASE_DIR, "stg", "sales", "2022-08-09")
 
 
-def run_job1():
+def run_job1(port, host):
     print("Starting job1:")
     resp = requests.post(
-        url=f'http://localhost:{JOB1_PORT}/',
+        url=f'http://{host}:{port}/',
         json={
             "date": "2022-08-09",
             "raw_dir": RAW_DIR
@@ -29,10 +29,10 @@ def run_job1():
     print("job1 completed!")
 
 
-def run_job2():
+def run_job2(port, host):
     print("Starting job2:")
     resp = requests.post(
-        url=f'http://localhost:{JOB2_PORT}/',
+        url=f'http://{host}:{port}/',
         json={
             "raw_dir": RAW_DIR,
             "stg_dir": STG_DIR
@@ -43,6 +43,8 @@ def run_job2():
 
 
 if __name__ == '__main__':
-    run_job1()
+    host = 'localhost'
+
+    run_job1(JOB1_PORT, host)
     time.sleep(3)
-    run_job2()
+    run_job2(JOB2_PORT, host)
